@@ -10,7 +10,8 @@ function LineChart({ pieceName, movesWhite, movesBlack }) {
   for (var i = 0; i < 8; ++i)
     for (var j = 0; j < 8; ++j) positions.push(letters[i] + numbers[j]);
 
-  useEffect(() => {
+  console.log(positions);
+    useEffect(() => {
     const margin = { top: 10, right: 0, bottom: 10, left: 5 };
     const width = (window.innerWidth * 0.8) / 8 - margin.left - margin.right;
     const height = window.innerHeight * 0.4 - margin.top - margin.bottom;
