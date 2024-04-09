@@ -1,38 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import LineChart from "./LineChart";
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  var letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
+  var numbers = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  var positions = [];
+  for (let i = 0; i < 8; ++i) {
+    for (let j = 0; j < 8; ++j) {
+      positions.push(letters[i] + numbers[j]);
+    }
+  }
   return (
-    <>
-     <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="grid grid-rows-2 grid-cols-8 justify-items-center h-[90vh] w-[100vw]">
+      <LineChart
+        pieceName="Pawn"
+        movesWhite={["e2", "e4", "e4", "e4", "f5"]}
+        movesBlack={["e7", "e5", "e5", "d4", "c3"]}
+        positions={positions}
+      ></LineChart>
+      <LineChart
+        pieceName="Pawn"
+        movesWhite={["e2", "e4", "e4", "e4", "f5"]}
+        movesBlack={["e7", "e5", "e5", "d4", "c3"]}
+        positions={positions}
+      ></LineChart>
+      <LineChart
+        pieceName="Pawn"
+        movesWhite={["e2", "e4", "e4", "e4", "f5"]}
+        movesBlack={["e7", "e5", "e5", "d4", "c3"]}
+        positions={positions}
+      ></LineChart>
+      <LineChart
+        pieceName="Pawn"
+        movesWhite={["e2", "e4", "e4", "e4", "f5"]}
+        movesBlack={["e7", "e5", "e5", "d4", "c3"]}
+        positions={positions}
+      ></LineChart>
+    </div>
+  );
 }
 
-export default App
+export default App;
