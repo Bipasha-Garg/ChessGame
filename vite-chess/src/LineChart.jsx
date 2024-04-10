@@ -115,7 +115,7 @@ function LineChart({
   }, [movesWhite, movesBlack, positions]);
 
   return (
-    <div className="bg-pink-200 w-full border-black border-2 h-full">
+    <div className="  bg-teal-400 w-full border-black border-2 h-full">
       <p className=" ml-2">{pieceName}</p>
       <svg ref={chartRef}></svg>
     </div>
