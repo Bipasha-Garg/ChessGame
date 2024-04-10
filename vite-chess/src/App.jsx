@@ -3,33 +3,24 @@ import conversions from "./Datasets/conversions.json";
 import gold_coin from "./Datasets/gold_coin.json";
 
 function App() {
-  const keysArray = Object.keys(gold_coin);
-  const positionsArray = keysArray.map((key, index) => [key, index]);
+  //create array to store the white and black pieces' moves separately
   const categorizedPieces = {
     white: [],
     black: [],
   };
 
+  //logic to separate the white and blacks
   for (const key in gold_coin) {
     const position = key.substring(0, 2);
     const moves = gold_coin[key];
     const color = /[a-h][1-2]/.test(position) ? "white" : "black";
-    const pieceName = key.substring(2); // Extract piece name
+    const pieceName = key.substring(2);
     categorizedPieces[color].push({ name: key, moves });
   }
 
-  var letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
-  var numbers = ["1", "2", "3", "4", "5", "6", "7", "8"];
-  var positions = [];
-  for (let i = 0; i < 8; ++i) {
-    for (let j = 0; j < 8; ++j) {
-      positions.push(letters[i] + numbers[j]);
-    }
-  }
-
+// array to store the piecename white moves and black moves for the corresponding pair
   const pairedPieces = [];
-
-  // Define the positions for pairing
+  //white positions
   const whitePositions = [
     "a2",
     "b2",
@@ -48,6 +39,7 @@ function App() {
     "g1",
     "h1",
   ];
+  //black positions corresponding to the white positions
   const blackPositions = [
     "a7",
     "b7",
@@ -75,14 +67,21 @@ function App() {
     const blackPiece = categorizedPieces.black.find((piece) =>
       piece.name.startsWith(blackPositions[index])
     );
+    // to store piece name , white and black move
     if (whitePiece && blackPiece) {
+      let pieceName = whitePiece.name.substring(2);
+      // differentiating between the pairs of pawn
+      if (pieceName === "pawn") {
+        pieceName = whitePiece.name[0] + " " + pieceName;
+      }
       pairedPieces.push({
-        pieceName: whitePiece.name.substring(2),
+        pieceName: pieceName,
         whitemove: whitePiece.moves,
         blackmove: blackPiece.moves,
       });
     }
   });
+//to count max moves
   let maxWhiteMoves = 0;
   let maxBlackMoves = 0;
 
@@ -90,13 +89,22 @@ function App() {
     maxWhiteMoves = Math.max(maxWhiteMoves, pair.whitemove.length);
     maxBlackMoves = Math.max(maxBlackMoves, pair.blackmove.length);
   });
-
+//max moves in the whole game by a certain piece
   var result = 0;
   result = Math.max(maxWhiteMoves, maxBlackMoves);
-
+ // storing positions
+  var letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
+  var numbers = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  var positions = [];
+  for (let i = 0; i < 8; ++i) {
+    for (let j = 0; j < 8; ++j) {
+      positions.push(letters[i] + numbers[j]);
+    }
+  }
 
   return (
     <div className="grid grid-rows-2 grid-cols-8 justify-items-center h-[90vh] w-[100vw]">
+    {/* calling line chart for each pair */}
       {pairedPieces.map((pair, index) => (
         <LineChart
           // key={index}
