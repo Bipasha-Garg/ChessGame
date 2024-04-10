@@ -1,0 +1,248 @@
+The code was written in React with a Vite bundler, src code can be found in the following repositry (inside vite-chess)
+
+https://github.com/Bipasha-Garg/ChessGame
+
+Here are the relevant components
+
+
+function App() {
+  //create array to store the white and black pieces' moves separately
+  const categorizedPieces = {
+    white: [],
+    black: [],
+  };
+  var data = hikaru;
+  //logic to separate the white and blacks
+  for (const key in data) {
+    const position = key.substring(0, 2);
+    const moves = data[key];
+    const color = /[a-h][1-2]/.test(position) ? "white" : "black";
+    const pieceName = key.substring(2);
+    categorizedPieces[color].push({ name: key, moves });
+  }
+
+// array to store the piecename white moves and black moves for the corresponding pair
+  const pairedPieces = [];
+  //white positions
+  const whitePositions = [
+    "a2",
+    "b2",
+    "c2",
+    "d2",
+    "e2",
+    "f2",
+    "g2",
+    "h2",
+    "a1",
+    "b1",
+    "c1",
+    "d1",
+    "e1",
+    "f1",
+    "g1",
+    "h1",
+  ];
+  //black positions corresponding to the white positions
+  const blackPositions = [
+    "a7",
+    "b7",
+    "c7",
+    "d7",
+    "e7",
+    "f7",
+    "g7",
+    "h7",
+    "a8",
+    "b8",
+    "c8",
+    "d8",
+    "e8",
+    "f8",
+    "g8",
+    "h8",
+  ];
+
+  // Pair the pieces based on positions
+  whitePositions.forEach((position, index) => {
+    const whitePiece = categorizedPieces.white.find((piece) =>
+      piece.name.startsWith(position)
+    );
+    const blackPiece = categorizedPieces.black.find((piece) =>
+      piece.name.startsWith(blackPositions[index])
+    );
+    // to store piece name , white and black move
+    if (whitePiece && blackPiece) {
+      let pieceName = whitePiece.name.substring(2);
+      // differentiating between the pairs of pawn
+      if (pieceName !== "king" && pieceName !=="queen") {
+        pieceName = whitePiece.name[0] + " " + pieceName;
+      }
+      pairedPieces.push({
+        pieceName: pieceName,
+        whitemove: whitePiece.moves,
+        blackmove: blackPiece.moves,
+      });
+    }
+  });
+//to count max moves
+  let maxWhiteMoves = 0;
+  let maxBlackMoves = 0;
+
+  pairedPieces.forEach((pair) => {
+    maxWhiteMoves = Math.max(maxWhiteMoves, pair.whitemove.length);
+    maxBlackMoves = Math.max(maxBlackMoves, pair.blackmove.length);
+  });
+  console.log(pairedPieces);
+//max moves in the whole game by a certain piece
+  var result = 0;
+  result = Math.max(maxWhiteMoves, maxBlackMoves);
+ // storing positions
+  var letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
+  var numbers = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  var positions = [];
+  for (let i = 0; i < 8; ++i) {
+    for (let j = 0; j < 8; ++j) {
+      positions.push(letters[i] + numbers[j]);
+    }
+  }
+
+  return (
+    <div className="grid grid-rows-2 grid-cols-8 justify-items-center h-[90vh] w-[100vw]">
+    {/* calling line chart for each pair */}
+      {pairedPieces.map((pair, index) => (
+        <LineChart
+          // key={index}
+          pieceName={pair.pieceName}
+          movesWhite={pair.whitemove}
+          movesBlack={pair.blackmove}
+          positions={positions}
+          noOfMoves={result}
+        />
+      ))}
+    </div>
+  );
+}
+
+
+
+function LineChart({
+  pieceName,
+  movesWhite,
+  movesBlack,
+  positions,
+  noOfMoves,
+}) {
+  // reference for the chart
+  const chartRef = useRef();
+
+  useEffect(() => {
+    // declare dimensions for the chart
+    const margin = { top: 10, right: 10, bottom: 10, left: 10 };
+    const width = (window.innerWidth * 0.9) / 8 - margin.left - margin.right;
+    const height = window.innerHeight * 0.4 - margin.top - margin.bottom;
+
+    // creating the chart
+    const chart = d3.select(chartRef.current);
+    chart.selectAll("*").remove();
+    chart
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom);
+
+    // setting up the scaling for x and y axes
+    const xScale = d3
+      .scaleLinear()
+      .domain([0, noOfMoves])
+      .range([0, width - margin.left]);
+    const yScale = d3
+      .scaleLinear()
+      .domain([1, 64])
+      .range([height - margin.bottom, 0]);
+
+    // creating group of svg for chart
+    const g = chart
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // line generator for moves of white piece and black piece
+    const lineWhite = d3
+      .line()
+      .x((d, i) => xScale(i))
+      .y((d) => yScale(positions.indexOf(d) + 1));
+    const lineBlack = d3
+      .line()
+      .x((d, i) => xScale(i))
+      .y((d) => yScale(positions.indexOf(d) + 1));
+
+    // render the line and dots for white piece
+    g.append("path")
+      .datum(movesWhite)
+      .attr("stroke", "white")
+      .attr("stroke-width", 2)
+      .attr("fill", "none")
+      .attr("d", lineWhite)
+      .attr("transform", `translate(${margin.left},0)`);
+    g.selectAll("dots")
+      .data(movesWhite)
+      .enter()
+      .append("circle")
+      .attr("cx", function (d, i) {
+        return xScale(i) + margin.left;
+      })
+      .attr("cy", function (d) {
+        return yScale(positions.indexOf(d) + 1);
+      })
+      .attr("r", 2)
+      .attr("fill", "white");
+
+    // render the line and dots for black piece
+    g.append("path")
+      .datum(movesBlack)
+      .attr("stroke", "black")
+      .attr("stroke-width", 2)
+      .attr("fill", "none")
+      .attr("d", lineBlack)
+      .attr("transform", `translate(${margin.left},0)`);
+    g.selectAll("dots")
+      .data(movesBlack)
+      .enter()
+      .append("circle")
+      .attr("cx", function (d, i) {
+        return xScale(i) + margin.left;
+      })
+      .attr("cy", function (d) {
+        return yScale(positions.indexOf(d) + 1);
+      })
+      .attr("r", 2)
+      .attr("fill", "black");
+
+    // render the axes
+    var xAxis = d3.axisBottom(xScale).ticks(noOfMoves + 1);
+    var yAxis = d3
+      .axisLeft(yScale)
+      .ticks(64)
+      .tickSize(2)
+      .tickFormat((d, i) => positions[i]);
+    g.append("g")
+      .style("font-size", "8px")
+      .attr("transform", `translate(${margin.left},${height - margin.bottom})`)
+      .call(xAxis)
+      // tilt the labels
+      .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-1em")
+      .attr("dy", "-0.8em")
+      .attr("transform", "rotate(270)");
+    g.append("g")
+      .style("font-size", "6px")
+      .attr("transform", `translate(${margin.left},0)`)
+      .call(yAxis);
+  }, [movesWhite, movesBlack, positions]);
+
+  return (
+    <div className="  bg-teal-400 w-full border-black border-2 h-full">
+      <p className=" ml-2">{pieceName}</p>
+      <svg ref={chartRef}></svg>
+    </div>
+  );
+}
+

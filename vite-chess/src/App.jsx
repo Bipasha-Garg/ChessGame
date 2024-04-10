@@ -10,7 +10,7 @@ function App() {
     white: [],
     black: [],
   };
-  var data = magnus_resign;
+  var data = hikaru;
   //logic to separate the white and blacks
   for (const key in data) {
     const position = key.substring(0, 2);
