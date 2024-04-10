@@ -49,6 +49,18 @@ function LineChart({
       .attr("fill", "none")
       .attr("d", lineWhite)
       .attr("transform", `translate(${margin.left},0)`);
+    g.selectAll("dots")
+      .data(movesWhite)
+      .enter()
+      .append("circle")
+      .attr("cx", function (d, i) {
+        return xScale(i) + margin.left;
+      })
+      .attr("cy", function (d) {
+        return yScale(positions.indexOf(d) + 1);
+      })
+      .attr("r", 2)
+      .attr("fill", "white");
     g.append("path")
       .datum(movesBlack)
       .attr("stroke", "black")
@@ -56,6 +68,18 @@ function LineChart({
       .attr("fill", "none")
       .attr("d", lineBlack)
       .attr("transform", `translate(${margin.left},0)`);
+    g.selectAll("dots")
+      .data(movesBlack)
+      .enter()
+      .append("circle")
+      .attr("cx", function (d, i) {
+        return xScale(i) + margin.left;
+      })
+      .attr("cy", function (d) {
+        return yScale(positions.indexOf(d) + 1);
+      })
+      .attr("r", 2)
+      .attr("fill", "black");
 
     var xAxis = d3.axisBottom(xScale).ticks(noOfMoves + 1);
     var yAxis = d3
