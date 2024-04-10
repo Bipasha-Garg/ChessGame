@@ -11,7 +11,7 @@ function LineChart({
   const chartRef = useRef();
 
   useEffect(() => {
-    const margin = { top: 10, right: -10, bottom: 10, left: 10 };
+    const margin = { top: 10, right: 10, bottom: 10, left: 10 };
     const width = (window.innerWidth * 0.9) / 8 - margin.left - margin.right;
     const height = window.innerHeight * 0.4 - margin.top - margin.bottom;
     const chart = d3.select(chartRef.current);
@@ -22,8 +22,8 @@ function LineChart({
 
     const xScale = d3
       .scaleLinear()
-      .domain([0, noOfMoves + 1])
-      .range([0, width]);
+      .domain([0, noOfMoves])
+      .range([0, width - margin.left]);
     const yScale = d3
       .scaleLinear()
       .domain([1, 64])
