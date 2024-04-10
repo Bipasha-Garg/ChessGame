@@ -24,10 +24,11 @@
     "g7pawn": ["g7", "g7", "g7"],
     "h7pawn": ["h7", "h7", "h7"],
     "a8rook": ["a8", "a8", "a8"],
+    "b8knight": ["b8", "b8", "b8"],
     "c8bishop": ["c8", "c8", "c8"],
     "d8queen": ["d8", "d8", "d8"],
     "e8king": ["e8", "e8", "e8"],
     "f8bishop": ["f8", "f8", "f8"],
-    "g8knight": ["g8", "f6", "g8"],
+    "g8knight": ["g8", "f6", "f6"],
     "h8rook": ["h8", "h8", "h8"]
 }

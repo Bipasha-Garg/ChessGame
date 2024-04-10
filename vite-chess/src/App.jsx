@@ -1,6 +1,8 @@
 import LineChart from "./LineChart";
 import conversions from "./Datasets/conversions.json";
 import gold_coin from "./Datasets/gold_coin.json";
+import hikaru from "./Datasets/hikaru.json";
+import magnus_resign from "./Datasets/magnus_resign.json";
 
 function App() {
   //create array to store the white and black pieces' moves separately
@@ -8,11 +10,11 @@ function App() {
     white: [],
     black: [],
   };
-
+  var data = magnus_resign;
   //logic to separate the white and blacks
-  for (const key in gold_coin) {
+  for (const key in data) {
     const position = key.substring(0, 2);
-    const moves = gold_coin[key];
+    const moves = data[key];
     const color = /[a-h][1-2]/.test(position) ? "white" : "black";
     const pieceName = key.substring(2);
     categorizedPieces[color].push({ name: key, moves });
@@ -71,7 +73,7 @@ function App() {
     if (whitePiece && blackPiece) {
       let pieceName = whitePiece.name.substring(2);
       // differentiating between the pairs of pawn
-      if (pieceName === "pawn") {
+      if (pieceName !== "king" && pieceName !=="queen") {
         pieceName = whitePiece.name[0] + " " + pieceName;
       }
       pairedPieces.push({
@@ -89,6 +91,7 @@ function App() {
     maxWhiteMoves = Math.max(maxWhiteMoves, pair.whitemove.length);
     maxBlackMoves = Math.max(maxBlackMoves, pair.blackmove.length);
   });
+  console.log(pairedPieces);
 //max moves in the whole game by a certain piece
   var result = 0;
   result = Math.max(maxWhiteMoves, maxBlackMoves);
