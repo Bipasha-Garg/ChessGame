@@ -1,7 +1,13 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-function LineChart({ pieceName, movesWhite, movesBlack, positions }) {
+function LineChart({
+  pieceName,
+  movesWhite,
+  movesBlack,
+  positions,
+  noOfMoves,
+}) {
   const chartRef = useRef();
 
   useEffect(() => {
@@ -16,7 +22,7 @@ function LineChart({ pieceName, movesWhite, movesBlack, positions }) {
 
     const xScale = d3
       .scaleLinear()
-      .domain([0, movesWhite.length + 1])
+      .domain([0, noOfMoves + 1])
       .range([0, width]);
     const yScale = d3
       .scaleLinear()
@@ -51,16 +57,21 @@ function LineChart({ pieceName, movesWhite, movesBlack, positions }) {
       .attr("d", lineBlack)
       .attr("transform", `translate(${margin.left},0)`);
 
-    var xAxis = d3.axisBottom(xScale).ticks(movesWhite.length + 1);
+    var xAxis = d3.axisBottom(xScale).ticks(noOfMoves + 1);
     var yAxis = d3
       .axisLeft(yScale)
       .ticks(64)
       .tickSize(2)
       .tickFormat((d, i) => positions[i]);
     g.append("g")
-      .style("font-size", "14px")
+      .style("font-size", "8px")
       .attr("transform", `translate(${margin.left},${height - margin.bottom})`)
-      .call(xAxis);
+      .call(xAxis)
+      .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-1em")
+      .attr("dy", "-0.8em")
+      .attr("transform", "rotate(270)");
     g.append("g")
       .style("font-size", "6px")
       .attr("transform", `translate(${margin.left},0)`)

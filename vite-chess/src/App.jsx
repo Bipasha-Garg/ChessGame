@@ -91,7 +91,7 @@ function App() {
     maxBlackMoves = Math.max(maxBlackMoves, pair.blackmove.length);
   });
 
-  const result = 0;
+  var result = 0;
   result = Math.max(maxWhiteMoves, maxBlackMoves);
 
 
@@ -104,6 +104,7 @@ function App() {
           movesWhite={pair.whitemove}
           movesBlack={pair.blackmove}
           positions={positions}
+          noOfMoves={result}
         />
       ))}
     </div>
